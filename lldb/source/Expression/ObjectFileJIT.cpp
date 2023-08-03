@@ -25,6 +25,10 @@
 #include "lldb/Utility/Timer.h"
 #include "lldb/Utility/UUID.h"
 
+#ifndef __APPLE__
+#include "Utility/UuidCompatibility.h"
+#endif
+
 using namespace lldb;
 using namespace lldb_private;
 

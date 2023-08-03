@@ -1,10 +1,10 @@
-//===-- CommandObjectBreakpointCommand.cpp --------------------------------===//
-//
-// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
-// See https://llvm.org/LICENSE.txt for license information.
-// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
-//
-//===----------------------------------------------------------------------===//
+// //===-- CommandObjectBreakpointCommand.cpp --------------------------------===//
+// //
+// // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// // See https://llvm.org/LICENSE.txt for license information.
+// // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+// //
+// //===----------------------------------------------------------------------===//
 
 #include "CommandObjectBreakpointCommand.h"
 #include "CommandObjectBreakpoint.h"
@@ -19,6 +19,7 @@
 #include "lldb/Interpreter/OptionArgParser.h"
 #include "lldb/Interpreter/OptionGroupPythonClassWithDict.h"
 #include "lldb/Target/Target.h"
+#include <stdio.h>
 
 using namespace lldb;
 using namespace lldb_private;
@@ -337,8 +338,18 @@ protected:
   bool DoExecute(Args &command, CommandReturnObject &result) override {
     Target &target = GetSelectedOrDummyTarget(m_options.m_use_dummy);
 
+    
+
     const BreakpointList &breakpoints = target.GetBreakpointList();
+
+    // Print the breakpoints.
+    printf("Breakpoints:\n");
     size_t num_breakpoints = breakpoints.GetSize();
+    for (size_t i = 0; i < breakpoints.GetSize(); ++i) {
+    BreakpointSP bp = breakpoints.GetBreakpointAtIndex(i);
+    printf("Breakpoint ID: %d\n", bp->GetID());
+  }
+
 
     if (num_breakpoints == 0) {
       result.AppendError("No breakpoints exist to have commands added");
@@ -354,6 +365,8 @@ protected:
     }
 
     BreakpointIDList valid_bp_ids;
+    printf("valid_bp_ids %ld\n", valid_bp_ids.GetSize());
+
     CommandObjectMultiwordBreakpoint::VerifyBreakpointOrLocationIDs(
         command, &target, result, &valid_bp_ids,
         BreakpointName::Permissions::PermissionKinds::listPerm);
@@ -362,6 +375,7 @@ protected:
 
     if (result.Succeeded()) {
       const size_t count = valid_bp_ids.GetSize();
+      printf("count %ld\n", count);
 
       for (size_t i = 0; i < count; ++i) {
         BreakpointID cur_bp_id = valid_bp_ids.GetBreakpointIDAtIndex(i);
@@ -370,12 +384,15 @@ protected:
               target.GetBreakpointByID(cur_bp_id.GetBreakpointID()).get();
           if (cur_bp_id.GetLocationID() == LLDB_INVALID_BREAK_ID) {
             // This breakpoint does not have an associated location.
+            printf("In if\n");
             m_bp_options_vec.push_back(bp->GetOptions());
           } else {
+            printf("In else\n");
             BreakpointLocationSP bp_loc_sp(
                 bp->FindLocationByID(cur_bp_id.GetLocationID()));
             // This breakpoint does have an associated location. Get its
             // breakpoint options.
+            // printf("Breakpoint Location ID: %d\n", bp->FindLocationByID(cur_bp_id.GetLocationID()));
             if (bp_loc_sp)
               m_bp_options_vec.push_back(bp_loc_sp->GetLocationOptions());
           }
@@ -587,6 +604,7 @@ public:
 
 protected:
   bool DoExecute(Args &command, CommandReturnObject &result) override {
+    printf("*************CommandObjectBreakpointCommandList DoExecute()************\n");
     Target *target = &GetSelectedTarget();
 
     const BreakpointList &breakpoints = target->GetBreakpointList();
@@ -666,6 +684,60 @@ protected:
   }
 };
 
+
+// class CommandObjectMyCommandTalha : public CommandObjectParsed {
+//   public:
+//     CommandObjectMyCommandTalha(CommandInterpreter &interpreter)
+//         : CommandObjectParsed(interpreter, "mycommand",
+//                               "Print My name is talha",
+//                               nullptr){}
+//     ~CommandObjectMyCommandTalha() override = default;
+//   protected:
+//     bool DoExecute(Args &command, CommandReturnObject &result) override {
+//     printf("Inside the Execute of the command\n");
+//     result.AppendMessage("My name is talha");
+//     result.SetStatus(eReturnStatusSuccessFinishResult);
+//     return result.Succeeded();
+//   }
+// };
+
+// class CommandObjectBreakpointCommandWord : public CommandObjectParsed {
+// public:
+//   CommandObjectBreakpointCommandWord(CommandInterpreter &interpreter)
+//       : CommandObjectParsed(
+//             interpreter, "word",
+//             "Print the specified word n number of times.",
+//             "breakpoint command word <word> <number>") {}
+
+//   ~CommandObjectBreakpointCommandWord() override = default;
+
+// protected:
+//   bool DoExecute(Args &command, CommandReturnObject &result) override {
+//     if (command.GetArgumentCount() != 2) {
+//       result.AppendError("Invalid number of arguments; expected 'breakpoint command word <word> <number>'.");
+//       result.SetStatus(eReturnStatusFailed);
+//       return false;
+//     }
+
+//     const char *word = command.GetArgumentAtIndex(0);
+//     const char *number_str = command.GetArgumentAtIndex(1);
+//     uint64_t number;
+//     if (!llvm::to_integer(number_str, number)) {
+//       result.AppendErrorWithFormat("Invalid number argument '%s'; expected a positive integer.", number_str);
+//       result.SetStatus(eReturnStatusFailed);
+//       return false;
+//     }
+
+//     for (uint64_t i = 0; i < number; ++i) {
+//       result.AppendMessage(word);
+//     }
+
+//     result.SetStatus(eReturnStatusSuccessFinishResult);
+//     return true;
+//   }
+// };
+
+
 // CommandObjectBreakpointCommand
 
 CommandObjectBreakpointCommand::CommandObjectBreakpointCommand(
@@ -682,14 +754,25 @@ CommandObjectBreakpointCommand::CommandObjectBreakpointCommand(
       new CommandObjectBreakpointCommandDelete(interpreter));
   CommandObjectSP list_command_object(
       new CommandObjectBreakpointCommandList(interpreter));
+  // CommandObjectSP talha_command_object(
+  //     new CommandObjectMyCommandTalha(interpreter));
 
   add_command_object->SetCommandName("breakpoint command add");
   delete_command_object->SetCommandName("breakpoint command delete");
-  list_command_object->SetCommandName("breakpoint command list");
+  list_command_object->SetCommandName("breakpoint command list10x");
+  // talha_command_object->SetCommandName("breakpoint command mycommand");
 
   LoadSubCommand("add", add_command_object);
   LoadSubCommand("delete", delete_command_object);
-  LoadSubCommand("list", list_command_object);
+  LoadSubCommand("list10x", list_command_object);
+  // LoadSubCommand("mycommand", talha_command_object);
+
+//    CommandObjectSP word_command_object(
+//       new CommandObjectBreakpointCommandWord(interpreter));
+
+//   word_command_object->SetCommandName("breakpoint command");
+
+//   LoadSubCommand("word", word_command_object);
 }
 
 CommandObjectBreakpointCommand::~CommandObjectBreakpointCommand() = default;

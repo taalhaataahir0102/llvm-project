@@ -25,6 +25,7 @@
 #include "lldb/Utility/LLDBLog.h"
 #include "lldb/Utility/Log.h"
 #include "lldb/Utility/StreamString.h"
+#include <stdio.h>
 
 using namespace lldb;
 using namespace lldb_private;
@@ -35,6 +36,9 @@ BreakpointLocation::BreakpointLocation(break_id_t loc_id, Breakpoint &owner,
     : m_being_created(true), m_should_resolve_indirect_functions(false),
       m_is_reexported(false), m_is_indirect(false), m_address(addr),
       m_owner(owner), m_condition_hash(0), m_loc_id(loc_id), m_hit_counter() {
+        // printf("*****BREAKPOINT LOCATION CONSTRUCTOR*****\n");
+        // printf("loc_id = %d\n", loc_id);
+
   if (check_for_resolver) {
     Symbol *symbol = m_address.CalculateSymbolContextSymbol();
     if (symbol && symbol->IsIndirect()) {

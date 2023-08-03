@@ -16,6 +16,7 @@
 #include "lldb/Interpreter/CommandReturnObject.h"
 #include "lldb/Interpreter/Options.h"
 #include "lldb/Utility/StreamString.h"
+#include <stdio.h>
 
 using namespace lldb;
 using namespace lldb_private;
@@ -23,6 +24,8 @@ using namespace lldb_private;
 static bool ProcessAliasOptionsArgs(lldb::CommandObjectSP &cmd_obj_sp,
                                     llvm::StringRef options_args,
                                     OptionArgVectorSP &option_arg_vector_sp) {
+  // printf("*****Command Allias*****\n");
+  // printf("options_args: %s\n", options_args);
   bool success = true;
   OptionArgVector *option_arg_vector = option_arg_vector_sp.get();
 
@@ -85,6 +88,7 @@ CommandAlias::CommandAlias(CommandInterpreter &interpreter,
       m_option_args_sp(new OptionArgVector),
       m_is_dashdash_alias(eLazyBoolCalculate), m_did_set_help(false),
       m_did_set_help_long(false) {
+  // printf("*****Command Allias*****\n");
   if (ProcessAliasOptionsArgs(cmd_sp, options_args, m_option_args_sp)) {
     m_underlying_command_sp = cmd_sp;
     for (int i = 0;
@@ -106,18 +110,21 @@ CommandAlias::CommandAlias(CommandInterpreter &interpreter,
 }
 
 bool CommandAlias::WantsRawCommandString() {
+  printf("*****Wants Raw Command String*****\n");
   if (IsValid())
     return m_underlying_command_sp->WantsRawCommandString();
   return false;
 }
 
 bool CommandAlias::WantsCompletion() {
+  printf("*****Wants Completion*****\n");
   if (IsValid())
     return m_underlying_command_sp->WantsCompletion();
   return false;
 }
 
 void CommandAlias::HandleCompletion(CompletionRequest &request) {
+  printf("*****Handle Completion*****\n");
   if (IsValid())
     m_underlying_command_sp->HandleCompletion(request);
 }
@@ -130,6 +137,7 @@ void CommandAlias::HandleArgumentCompletion(
 }
 
 Options *CommandAlias::GetOptions() {
+  printf("*****Get Options*****\n");
   if (IsValid())
     return m_underlying_command_sp->GetOptions();
   return nullptr;

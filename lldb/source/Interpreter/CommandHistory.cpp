@@ -10,12 +10,14 @@
 #include <optional>
 
 #include "lldb/Interpreter/CommandHistory.h"
+#include <stdio.h>
 
 using namespace lldb;
 using namespace lldb_private;
 
 size_t CommandHistory::GetSize() const {
   std::lock_guard<std::recursive_mutex> guard(m_mutex);
+  printf("History size: %ld\n", m_history.size());
   return m_history.size();
 }
 
@@ -88,6 +90,7 @@ void CommandHistory::AppendString(llvm::StringRef str, bool reject_if_dupe) {
 }
 
 void CommandHistory::Clear() {
+  printf("*****Clearing History*****\n");
   std::lock_guard<std::recursive_mutex> guard(m_mutex);
   m_history.clear();
 }

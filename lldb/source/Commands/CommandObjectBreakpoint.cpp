@@ -8,6 +8,8 @@
 
 #include "CommandObjectBreakpoint.h"
 #include "CommandObjectBreakpointCommand.h"
+#include "CommandObjectNewCommand.h"
+#include "CommandObjectHi.h"
 #include "lldb/Breakpoint/Breakpoint.h"
 #include "lldb/Breakpoint/BreakpointIDList.h"
 #include "lldb/Breakpoint/BreakpointLocation.h"
@@ -332,6 +334,7 @@ public:
       case 'h': {
         bool success;
         m_catch_bp = OptionArgParser::ToBoolean(option_arg, true, &success);
+        printf("*****Here*****\n");
         if (!success)
           error.SetErrorStringWithFormat(
               "Invalid boolean value for on-catch option: '%s'",
@@ -1093,7 +1096,7 @@ class CommandObjectBreakpointList : public CommandObjectParsed {
 public:
   CommandObjectBreakpointList(CommandInterpreter &interpreter)
       : CommandObjectParsed(
-            interpreter, "breakpoint list",
+            interpreter, "breakpoint list10x",
             "List some or all breakpoints at configurable levels of detail.",
             nullptr) {
     CommandArgumentEntry arg;
@@ -2438,6 +2441,10 @@ CommandObjectMultiwordBreakpoint::CommandObjectMultiwordBreakpoint(
       new CommandObjectBreakpointSet(interpreter));
   CommandObjectSP command_command_object(
       new CommandObjectBreakpointCommand(interpreter));
+  CommandObjectSP command_command_command_object(
+      new CommandObjectNewCommand(interpreter));
+  CommandObjectSP hi_command_object(
+      new CommandObjectHi(interpreter));
   CommandObjectSP modify_command_object(
       new CommandObjectBreakpointModify(interpreter));
   CommandObjectSP name_command_object(
@@ -2454,6 +2461,8 @@ CommandObjectMultiwordBreakpoint::CommandObjectMultiwordBreakpoint(
   delete_command_object->SetCommandName("breakpoint delete");
   set_command_object->SetCommandName("breakpoint set");
   command_command_object->SetCommandName("breakpoint command");
+  command_command_command_object->SetCommandName("breakpoint hello");
+  hi_command_object->SetCommandName("breakpoint hi");
   modify_command_object->SetCommandName("breakpoint modify");
   name_command_object->SetCommandName("breakpoint name");
   write_command_object->SetCommandName("breakpoint write");
@@ -2466,6 +2475,8 @@ CommandObjectMultiwordBreakpoint::CommandObjectMultiwordBreakpoint(
   LoadSubCommand("delete", delete_command_object);
   LoadSubCommand("set", set_command_object);
   LoadSubCommand("command", command_command_object);
+  LoadSubCommand("hello", command_command_command_object);
+  LoadSubCommand("hi", hi_command_object);
   LoadSubCommand("modify", modify_command_object);
   LoadSubCommand("name", name_command_object);
   LoadSubCommand("write", write_command_object);

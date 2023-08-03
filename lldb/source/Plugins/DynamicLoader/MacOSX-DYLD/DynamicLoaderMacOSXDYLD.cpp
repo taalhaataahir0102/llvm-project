@@ -40,7 +40,7 @@
 #endif
 
 #ifndef __APPLE__
-#include "lldb/Utility/AppleUuidCompatibility.h"
+#include "Utility/UuidCompatibility.h"
 #else
 #include <uuid/uuid.h>
 #endif

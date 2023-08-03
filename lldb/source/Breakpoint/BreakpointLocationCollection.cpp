@@ -12,6 +12,7 @@
 #include "lldb/Core/ModuleList.h"
 #include "lldb/Target/Thread.h"
 #include "lldb/Target/ThreadSpec.h"
+#include <stdio.h>
 
 using namespace lldb;
 using namespace lldb_private;
@@ -24,6 +25,10 @@ BreakpointLocationCollection::~BreakpointLocationCollection() = default;
 
 void BreakpointLocationCollection::Add(const BreakpointLocationSP &bp_loc) {
   std::lock_guard<std::mutex> guard(m_collection_mutex);
+
+  // printf("bp_loc->GetBreakpoint().GetID() = %d\n", bp_loc->GetBreakpoint().GetID());
+  // printf("bp_loc->GetID() = %d\n", bp_loc->GetID());
+
   BreakpointLocationSP old_bp_loc =
       FindByIDPair(bp_loc->GetBreakpoint().GetID(), bp_loc->GetID());
   if (!old_bp_loc.get())

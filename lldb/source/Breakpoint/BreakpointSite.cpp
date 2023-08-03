@@ -14,6 +14,7 @@
 #include "lldb/Breakpoint/BreakpointLocation.h"
 #include "lldb/Breakpoint/BreakpointSiteList.h"
 #include "lldb/Utility/Stream.h"
+#include <stdio.h>
 
 using namespace lldb;
 using namespace lldb_private;
@@ -28,6 +29,7 @@ BreakpointSite::BreakpointSite(BreakpointSiteList *list,
       m_enabled(false) // Need to create it disabled, so the first enable turns
                        // it on.
 {
+  printf("****Breakpoint Site*****\n");
   m_owners.Add(owner);
 }
 
@@ -64,6 +66,8 @@ bool BreakpointSite::ShouldStop(StoppointCallbackContext *context) {
 bool BreakpointSite::IsBreakpointAtThisSite(lldb::break_id_t bp_id) {
   std::lock_guard<std::recursive_mutex> guard(m_owners_mutex);
   const size_t owner_count = m_owners.GetSize();
+  printf("owner_count: %ld\n", owner_count);
+  printf("bp_id: %ld\n", bp_id);
   for (size_t i = 0; i < owner_count; i++) {
     if (m_owners.GetByIndex(i)->GetBreakpoint().GetID() == bp_id)
       return true;

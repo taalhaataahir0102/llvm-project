@@ -3,6 +3,8 @@ lldb_tablegen(CommandOptions.inc -gen-lldb-option-defs
   TARGET LLDBOptionsGen)
 
 add_lldb_library(lldbCommands NO_PLUGIN_DEPENDENCIES
+  CommandObjectHi.cpp
+  CommandObjectNewCommand.cpp
   CommandCompletions.cpp
   CommandObjectApropos.cpp
   CommandObjectBreakpoint.cpp

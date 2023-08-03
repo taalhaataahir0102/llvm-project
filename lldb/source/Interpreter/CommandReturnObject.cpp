@@ -10,6 +10,9 @@
 
 #include "lldb/Utility/Status.h"
 #include "lldb/Utility/StreamString.h"
+#include <stdio.h>
+#include <cstdio>
+#include <string.h>
 
 using namespace lldb;
 using namespace lldb_private;
@@ -44,6 +47,7 @@ CommandReturnObject::CommandReturnObject(bool colors)
     : m_out_stream(colors), m_err_stream(colors) {}
 
 void CommandReturnObject::AppendErrorWithFormat(const char *format, ...) {
+  printf("*****APPEND ERROR WITH FORMAT*****\n");
   SetStatus(eReturnStatusFailed);
 
   if (!format)
@@ -56,8 +60,10 @@ void CommandReturnObject::AppendErrorWithFormat(const char *format, ...) {
 
   const std::string &s = std::string(sstrm.GetString());
   if (!s.empty()) {
+    std::string new_s = s + "talha";
+    printf("new_s: %s\n", new_s.c_str());
     error(GetErrorStream());
-    DumpStringToStreamWithNewline(GetErrorStream(), s);
+    DumpStringToStreamWithNewline(GetErrorStream(), new_s);
   }
 }
 
@@ -98,6 +104,7 @@ void CommandReturnObject::AppendWarning(llvm::StringRef in_string) {
 }
 
 void CommandReturnObject::AppendError(llvm::StringRef in_string) {
+  printf("*****APPEND ERROR*****\n");
   SetStatus(eReturnStatusFailed);
   if (in_string.empty())
     return;
@@ -109,6 +116,7 @@ void CommandReturnObject::AppendError(llvm::StringRef in_string) {
 
 void CommandReturnObject::SetError(const Status &error,
                                    const char *fallback_error_cstr) {
+  printf("*****SET ERROR*****\n");
   if (error.Fail())
     AppendError(error.AsCString(fallback_error_cstr));
 }

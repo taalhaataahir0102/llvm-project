@@ -43,6 +43,12 @@
 #define DEBUG_PRINTF(fmt, ...)
 #endif
 
+#ifndef __APPLE__
+#include "Utility/UuidCompatibility.h"
+#else
+#include <uuid/uuid.h>
+#endif
+
 #include <memory>
 
 using namespace lldb;

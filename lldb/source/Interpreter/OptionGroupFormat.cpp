@@ -12,6 +12,7 @@
 #include "lldb/Interpreter/CommandInterpreter.h"
 #include "lldb/Target/ExecutionContext.h"
 #include "lldb/Target/Target.h"
+#include <stdio.h>
 
 using namespace lldb;
 using namespace lldb_private;
@@ -38,6 +39,8 @@ OptionGroupFormat::OptionGroupFormat(
       m_byte_size(default_byte_size, default_byte_size),
       m_count(default_count, default_count), m_prev_gdb_format('x'),
       m_prev_gdb_size('w'), m_has_gdb_format(false) {
+
+  printf("Option Group Format\n");
   // Copy the default option definitions.
   std::copy(std::begin(g_default_option_definitions),
             std::end(g_default_option_definitions),

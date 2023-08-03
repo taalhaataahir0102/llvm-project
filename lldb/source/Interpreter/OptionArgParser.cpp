@@ -12,12 +12,14 @@
 #include "lldb/Target/Target.h"
 #include "lldb/Utility/Status.h"
 #include "lldb/Utility/StreamString.h"
+#include <stdio.h>
 
 using namespace lldb_private;
 using namespace lldb;
 
 bool OptionArgParser::ToBoolean(llvm::StringRef ref, bool fail_value,
                                 bool *success_ptr) {
+  printf("*****OPTION ARG PARSER ToBoolean*****\n");
   if (success_ptr)
     *success_ptr = true;
   ref = ref.trim();
@@ -35,6 +37,7 @@ bool OptionArgParser::ToBoolean(llvm::StringRef ref, bool fail_value,
 
 char OptionArgParser::ToChar(llvm::StringRef s, char fail_value,
                              bool *success_ptr) {
+  printf("*****OPTION ARG PARSER ToChar*****\n");
   if (success_ptr)
     *success_ptr = false;
   if (s.size() != 1)
@@ -48,6 +51,7 @@ char OptionArgParser::ToChar(llvm::StringRef s, char fail_value,
 int64_t OptionArgParser::ToOptionEnum(llvm::StringRef s,
                                       const OptionEnumValues &enum_values,
                                       int32_t fail_value, Status &error) {
+  printf("*****OPTION ARG PARSER ToOptionEnum*****\n");
   error.Clear();
   if (enum_values.empty()) {
     error.SetErrorString("invalid enumeration argument");
@@ -78,6 +82,8 @@ int64_t OptionArgParser::ToOptionEnum(llvm::StringRef s,
 
 Status OptionArgParser::ToFormat(const char *s, lldb::Format &format,
                                  size_t *byte_size_ptr) {
+  // printf("*****OPTION ARG PARSER ToFormat*****\n");
+  // printf("s:%s\n", s);
   format = eFormatInvalid;
   Status error;
 
@@ -123,6 +129,7 @@ Status OptionArgParser::ToFormat(const char *s, lldb::Format &format,
 
 lldb::ScriptLanguage OptionArgParser::ToScriptLanguage(
     llvm::StringRef s, lldb::ScriptLanguage fail_value, bool *success_ptr) {
+  printf("*****OPTION ARG PARSER ToScriptLanguage*****\n");
   if (success_ptr)
     *success_ptr = true;
 
@@ -152,6 +159,7 @@ lldb::addr_t OptionArgParser::ToAddress(const ExecutionContext *exe_ctx,
                                         llvm::StringRef s,
                                         lldb::addr_t fail_value,
                                         Status *error_ptr) {
+  printf("*****OPTION ARG PARSER ToAddress*****\n");
   std::optional<lldb::addr_t> maybe_addr = DoToAddress(exe_ctx, s, error_ptr);
   if (!maybe_addr)
     return fail_value;
@@ -161,7 +169,7 @@ lldb::addr_t OptionArgParser::ToAddress(const ExecutionContext *exe_ctx,
   if (Process *process = exe_ctx->GetProcessPtr())
     if (ABISP abi_sp = process->GetABI())
       addr = abi_sp->FixCodeAddress(addr);
-
+  printf("Address: %p\n", (void*)addr);
   return addr;
 }
 

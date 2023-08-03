@@ -11,6 +11,7 @@
 #include "lldb/Utility/Stream.h"
 #include "lldb/Utility/StringList.h"
 #include "llvm/ADT/StringSwitch.h"
+#include <stdio.h>
 
 using namespace lldb;
 using namespace lldb_private;
@@ -372,6 +373,21 @@ void Args::SetArguments(size_t argc, const char **argv) {
 }
 
 void Args::SetArguments(const char **argv) {
+
+  printf("*******Inside SetArguments(const char **argv)*******\n");
+
+  // Determine the number of arguments in the array (assuming it's null-terminated)
+  int argc = 0;
+  while (argv[argc] != NULL) {
+    ++argc;
+  }
+
+  // Print the argv array
+  for (int i = 0; i < argc; ++i) {
+    printf("argv[%d]: %s\n", i, argv[i]);
+  }
+
+
   SetArguments(ArgvToArgc(argv), argv);
 }
 

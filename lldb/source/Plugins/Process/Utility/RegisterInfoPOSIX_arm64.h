@@ -15,7 +15,7 @@
 #include "lldb/lldb-private.h"
 #include <map>
 
-enum class SVEState : uint8_t { Unknown, Disabled, FPSIMD, Full, Streaming };
+enum class SVEState { Unknown, Disabled, FPSIMD, Full };
 
 class RegisterInfoPOSIX_arm64
     : public lldb_private::RegisterInfoAndSetInterface {
@@ -26,10 +26,9 @@ public:
   enum {
     eRegsetMaskDefault = 0,
     eRegsetMaskSVE = 1,
-    eRegsetMaskSSVE = 2,
-    eRegsetMaskPAuth = 4,
-    eRegsetMaskMTE = 8,
-    eRegsetMaskTLS = 16,
+    eRegsetMaskPAuth = 2,
+    eRegsetMaskMTE = 4,
+    eRegsetMaskTLS = 8,
     eRegsetMaskDynamic = ~1,
   };
 
@@ -104,7 +103,7 @@ public:
 
   void AddRegSetMTE();
 
-  void AddRegSetTLS(bool has_tpidr2);
+  void AddRegSetTLS();
 
   uint32_t ConfigureVectorLength(uint32_t sve_vq);
 
@@ -116,10 +115,8 @@ public:
   }
 
   bool IsSVEEnabled() const { return m_opt_regsets.AnySet(eRegsetMaskSVE); }
-  bool IsSSVEEnabled() const { return m_opt_regsets.AnySet(eRegsetMaskSSVE); }
   bool IsPAuthEnabled() const { return m_opt_regsets.AnySet(eRegsetMaskPAuth); }
   bool IsMTEEnabled() const { return m_opt_regsets.AnySet(eRegsetMaskMTE); }
-  bool IsTLSEnabled() const { return m_opt_regsets.AnySet(eRegsetMaskTLS); }
 
   bool IsSVEReg(unsigned reg) const;
   bool IsSVEZReg(unsigned reg) const;

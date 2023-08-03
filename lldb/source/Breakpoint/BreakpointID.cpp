@@ -13,12 +13,16 @@
 #include "lldb/Breakpoint/BreakpointID.h"
 #include "lldb/Utility/Status.h"
 #include "lldb/Utility/Stream.h"
+#include <stdio.h>
 
 using namespace lldb;
 using namespace lldb_private;
 
 BreakpointID::BreakpointID(break_id_t bp_id, break_id_t loc_id)
-    : m_break_id(bp_id), m_location_id(loc_id) {}
+    : m_break_id(bp_id), m_location_id(loc_id) {
+      // printf("*****Breakpoint id constructor*****\n");
+      printf("bp_id: %d\n", bp_id);
+    }
 
 BreakpointID::~BreakpointID() = default;
 

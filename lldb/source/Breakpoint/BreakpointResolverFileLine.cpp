@@ -17,6 +17,7 @@
 #include "lldb/Utility/Log.h"
 #include "lldb/Utility/StreamString.h"
 #include <optional>
+#include <stdio.h>
 
 using namespace lldb;
 using namespace lldb_private;
@@ -28,7 +29,9 @@ BreakpointResolverFileLine::BreakpointResolverFileLine(
     std::optional<llvm::StringRef> removed_prefix_opt)
     : BreakpointResolver(bkpt, BreakpointResolver::FileLineResolver, offset),
       m_location_spec(location_spec), m_skip_prologue(skip_prologue),
-      m_removed_prefix_opt(removed_prefix_opt) {}
+      m_removed_prefix_opt(removed_prefix_opt) {
+        printf("*****BREAKPOINT FILELINE RESOLVER*****\n");
+      }
 
 BreakpointResolver *BreakpointResolverFileLine::CreateFromStructuredData(
     const BreakpointSP &bkpt, const StructuredData::Dictionary &options_dict,

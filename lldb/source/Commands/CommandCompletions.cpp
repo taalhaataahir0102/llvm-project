@@ -29,6 +29,7 @@
 #include "lldb/Utility/FileSpecList.h"
 #include "lldb/Utility/StreamString.h"
 #include "lldb/Utility/TildeExpressionResolver.h"
+#include <stdio.h>
 
 #include "llvm/Support/FileSystem.h"
 #include "llvm/Support/Path.h"
@@ -626,6 +627,7 @@ void CommandCompletions::Breakpoints(CommandInterpreter &interpreter,
                                      CompletionRequest &request,
                                      SearchFilter *searcher) {
   lldb::TargetSP target = interpreter.GetDebugger().GetSelectedTarget();
+  printf("xxxxxxxxxxxxxxxxxxxxxx");
   if (!target)
     return;
 

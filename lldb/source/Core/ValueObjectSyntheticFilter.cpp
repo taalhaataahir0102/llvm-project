@@ -163,8 +163,8 @@ bool ValueObjectSynthetic::UpdateValue() {
     return false;
   }
 
-  // Regenerate the synthetic filter if our typename changes. When the (dynamic)
-  // type of an object changes, so does their synthetic filter of choice.
+  // regenerate the synthetic filter if our typename changes
+  // <rdar://problem/12424824>
   ConstString new_parent_type_name = m_parent->GetTypeName();
   if (new_parent_type_name != m_parent_type_name) {
     LLDB_LOGF(log,

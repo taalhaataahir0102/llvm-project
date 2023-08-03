@@ -83,11 +83,10 @@ private:
   bool m_fpu_is_valid;
   bool m_sve_buffer_is_valid;
   bool m_mte_ctrl_is_valid;
+  bool m_tls_tpidr_is_valid;
 
   bool m_sve_header_is_valid;
   bool m_pac_mask_is_valid;
-  bool m_tls_is_valid;
-  size_t m_tls_size;
 
   struct user_pt_regs m_gpr_arm64; // 64-bit general purpose registers.
 
@@ -109,13 +108,7 @@ private:
 
   uint64_t m_mte_ctrl_reg;
 
-  struct tls_regs {
-    uint64_t tpidr_reg;
-    // Only valid when SME is present.
-    uint64_t tpidr2_reg;
-  };
-
-  struct tls_regs m_tls_regs;
+  uint64_t m_tls_tpidr_reg;
 
   bool IsGPR(unsigned reg) const;
 
@@ -135,9 +128,9 @@ private:
 
   Status WriteMTEControl();
 
-  Status ReadTLS();
+  Status ReadTLSTPIDR();
 
-  Status WriteTLS();
+  Status WriteTLSTPIDR();
 
   bool IsSVE(unsigned reg) const;
   bool IsPAuth(unsigned reg) const;
@@ -154,9 +147,9 @@ private:
 
   void *GetMTEControl() { return &m_mte_ctrl_reg; }
 
-  void *GetTLSBuffer() { return &m_tls_regs; }
+  void *GetTLSTPIDR() { return &m_tls_tpidr_reg; }
 
-  void *GetSVEBuffer() { return m_sve_ptrace_payload.data(); }
+  void *GetSVEBuffer() { return m_sve_ptrace_payload.data(); };
 
   size_t GetSVEHeaderSize() { return sizeof(m_sve_header); }
 
@@ -164,11 +157,9 @@ private:
 
   size_t GetSVEBufferSize() { return m_sve_ptrace_payload.size(); }
 
-  unsigned GetSVERegSet();
-
   size_t GetMTEControlSize() { return sizeof(m_mte_ctrl_reg); }
 
-  size_t GetTLSBufferSize() { return m_tls_size; }
+  size_t GetTLSTPIDRSize() { return sizeof(m_tls_tpidr_reg); }
 
   llvm::Error ReadHardwareDebugInfo() override;
 

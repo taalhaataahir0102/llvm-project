@@ -20,6 +20,7 @@ using namespace lldb_private;
 ThreadPlanShouldStopHere::ThreadPlanShouldStopHere(ThreadPlan *owner)
     : m_callbacks(), m_baton(nullptr), m_owner(owner),
       m_flags(ThreadPlanShouldStopHere::eNone) {
+  printf("*****ThreadPlanShouldStopHere\n*****");
   m_callbacks.should_stop_here_callback =
       ThreadPlanShouldStopHere::DefaultShouldStopHereCallback;
   m_callbacks.step_from_here_callback =

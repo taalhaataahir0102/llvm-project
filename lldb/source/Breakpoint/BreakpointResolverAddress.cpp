@@ -14,6 +14,7 @@
 #include "lldb/Target/Target.h"
 #include "lldb/Utility/LLDBLog.h"
 #include "lldb/Utility/StreamString.h"
+#include <stdio.h>
 
 using namespace lldb;
 using namespace lldb_private;
@@ -23,12 +24,16 @@ BreakpointResolverAddress::BreakpointResolverAddress(
     const BreakpointSP &bkpt, const Address &addr, const FileSpec &module_spec)
     : BreakpointResolver(bkpt, BreakpointResolver::AddressResolver),
       m_addr(addr), m_resolved_addr(LLDB_INVALID_ADDRESS),
-      m_module_filespec(module_spec) {}
+      m_module_filespec(module_spec) {
+        printf("*****BREAKPOINT ADDRESS RESOLVER1*****\n");
+      }
 
 BreakpointResolverAddress::BreakpointResolverAddress(const BreakpointSP &bkpt,
                                                      const Address &addr)
     : BreakpointResolver(bkpt, BreakpointResolver::AddressResolver),
-      m_addr(addr), m_resolved_addr(LLDB_INVALID_ADDRESS) {}
+      m_addr(addr), m_resolved_addr(LLDB_INVALID_ADDRESS) {
+        printf("*****BREAKPOINT ADDRESS RESOLVER2*****\n");
+      }
 
 BreakpointResolver *BreakpointResolverAddress::CreateFromStructuredData(
     const BreakpointSP &bkpt, const StructuredData::Dictionary &options_dict,

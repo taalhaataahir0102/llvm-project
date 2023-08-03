@@ -12,6 +12,7 @@
 #include <optional>
 #include <string>
 #include <vector>
+#include <stdio.h>
 
 #include "Commands/CommandObjectApropos.h"
 #include "Commands/CommandObjectBreakpoint.h"
@@ -85,6 +86,8 @@
 #include "llvm/Support/PrettyStackTrace.h"
 #include "llvm/Support/ScopedPrinter.h"
 
+#include <stdio.h>
+
 #if defined(__APPLE__)
 #include <TargetConditionals.h>
 #endif
@@ -136,6 +139,7 @@ CommandInterpreter::CommandInterpreter(Debugger &debugger,
       m_comment_char('#'), m_batch_command_mode(false),
       m_truncation_warning(eNoOmission), m_max_depth_warning(eNoOmission),
       m_command_source_depth(0) {
+  printf("*****COMMAND INTERPRETER*****\n");
   SetEventName(eBroadcastBitThreadShouldExit, "thread-should-exit");
   SetEventName(eBroadcastBitResetPrompt, "reset-prompt");
   SetEventName(eBroadcastBitQuitCommandReceived, "quit");
@@ -151,7 +155,9 @@ bool CommandInterpreter::GetExpandRegexAliases() const {
 }
 
 bool CommandInterpreter::GetPromptOnQuit() const {
+  printf("*****GetPromptOnQuit*****\n");
   const uint32_t idx = ePropertyPromptOnQuit;
+  printf("idx = %u\n", idx);
   return GetPropertyAtIndexAs<bool>(
       idx, g_interpreter_properties[idx].default_uint_value != 0);
 }
@@ -269,6 +275,7 @@ bool CommandInterpreter::GetRequireCommandOverwrite() const {
 }
 
 void CommandInterpreter::Initialize() {
+  printf("*****CommandInterpreter::Initialize()*****\n");
   LLDB_SCOPED_TIMER();
 
   CommandReturnObject result(m_debugger.GetUseColor());
@@ -531,10 +538,11 @@ const char *CommandInterpreter::ProcessEmbeddedScriptCommands(const char *arg) {
   m_command_dict[NAME] = std::make_shared<CLASS>(*this);
 
 void CommandInterpreter::LoadCommandDictionary() {
+  printf("*****LoadCommandDictionary()*****\n");
   LLDB_SCOPED_TIMER();
 
   REGISTER_COMMAND_OBJECT("apropos", CommandObjectApropos);
-  REGISTER_COMMAND_OBJECT("breakpoint", CommandObjectMultiwordBreakpoint);
+  REGISTER_COMMAND_OBJECT("breakpoint10x", CommandObjectMultiwordBreakpoint);
   REGISTER_COMMAND_OBJECT("command", CommandObjectMultiwordCommands);
   REGISTER_COMMAND_OBJECT("diagnostics", CommandObjectDiagnostics);
   REGISTER_COMMAND_OBJECT("disassemble", CommandObjectDisassemble);
@@ -3282,6 +3290,7 @@ bool CommandInterpreter::IsInteractive() {
 }
 
 FileSpec CommandInterpreter::GetCurrentSourceDir() {
+  // printf("*****CURRENT SOURCE DIRECTORY\n");
   if (m_command_source_dirs.empty())
     return {};
   return m_command_source_dirs.back();

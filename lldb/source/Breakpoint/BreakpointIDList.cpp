@@ -14,6 +14,7 @@
 #include "lldb/Interpreter/CommandReturnObject.h"
 #include "lldb/Target/Target.h"
 #include "lldb/Utility/Args.h"
+#include <stdio.h>
 
 using namespace lldb;
 using namespace lldb_private;
@@ -21,7 +22,9 @@ using namespace lldb_private;
 // class BreakpointIDList
 
 BreakpointIDList::BreakpointIDList()
-    : m_invalid_id(LLDB_INVALID_BREAK_ID, LLDB_INVALID_BREAK_ID) {}
+    : m_invalid_id(LLDB_INVALID_BREAK_ID, LLDB_INVALID_BREAK_ID) {
+      // printf("*****Breakpoint IDlist constructor*****\n");
+    }
 
 BreakpointIDList::~BreakpointIDList() = default;
 

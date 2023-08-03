@@ -9,6 +9,7 @@
 #include "lldb/Interpreter/OptionGroupFile.h"
 
 #include "lldb/Host/OptionParser.h"
+#include <stdio.h>
 
 using namespace lldb;
 using namespace lldb_private;
@@ -18,6 +19,10 @@ OptionGroupFile::OptionGroupFile(uint32_t usage_mask, bool required,
                                  uint32_t completion_type,
                                  lldb::CommandArgumentType argument_type,
                                  const char *usage_text) {
+  printf("*****Option Group Boolean*****\n");
+  printf("Long Option: %s\n", long_option);
+  printf("Short Option: %d\n", short_option);
+  printf("Usage test: %s\n", usage_text);
   m_option_definition.usage_mask = usage_mask;
   m_option_definition.required = required;
   m_option_definition.long_option = long_option;

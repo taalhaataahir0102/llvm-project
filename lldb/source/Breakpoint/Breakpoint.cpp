@@ -30,6 +30,7 @@
 #include "lldb/Utility/Log.h"
 #include "lldb/Utility/Stream.h"
 #include "lldb/Utility/StreamString.h"
+#include <stdio.h>
 
 #include <memory>
 
@@ -48,6 +49,7 @@ Breakpoint::Breakpoint(Target &target, SearchFilterSP &filter_sp,
       m_filter_sp(filter_sp), m_resolver_sp(resolver_sp), m_options(true),
       m_locations(*this), m_resolve_indirect_symbols(resolve_indirect_symbols),
       m_hit_counter() {
+        printf("*****Breakpoint Constructor 1*****\n");
   m_being_created = false;
 }
 
@@ -56,7 +58,9 @@ Breakpoint::Breakpoint(Target &new_target, const Breakpoint &source_bp)
       m_target(new_target), m_name_list(source_bp.m_name_list),
       m_options(source_bp.m_options), m_locations(*this),
       m_resolve_indirect_symbols(source_bp.m_resolve_indirect_symbols),
-      m_hit_counter() {}
+      m_hit_counter() {
+        printf("*****Breakpoint Constructor 2*****\n");
+      }
 
 // Destructor
 Breakpoint::~Breakpoint() = default;

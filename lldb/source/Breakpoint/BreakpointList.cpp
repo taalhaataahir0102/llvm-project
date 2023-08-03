@@ -12,6 +12,8 @@
 
 #include "llvm/Support/Errc.h"
 
+#include <stdio.h>
+
 using namespace lldb;
 using namespace lldb_private;
 
@@ -23,7 +25,9 @@ static void NotifyChange(const BreakpointSP &bp, BreakpointEventType event) {
 }
 
 BreakpointList::BreakpointList(bool is_internal)
-    : m_next_break_id(0), m_is_internal(is_internal) {}
+    : m_next_break_id(0), m_is_internal(is_internal) {
+      // printf("*****Breakpoint List*****\n");
+    }
 
 BreakpointList::~BreakpointList() = default;
 
@@ -31,6 +35,7 @@ break_id_t BreakpointList::Add(BreakpointSP &bp_sp, bool notify) {
   std::lock_guard<std::recursive_mutex> guard(m_mutex);
 
   // Internal breakpoint IDs are negative, normal ones are positive
+  printf("m_next_break_id: %d\n", m_next_break_id);
   bp_sp->SetID(m_is_internal ? --m_next_break_id : ++m_next_break_id);
 
   m_breakpoints.push_back(bp_sp);

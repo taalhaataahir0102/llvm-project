@@ -5361,8 +5361,11 @@ uint32_t TypeSystemClang::GetNumChildren(lldb::opaque_compiler_type_t type,
           num_children += cxx_record_decl->getNumBases();
         }
       }
-      num_children += std::distance(record_decl->field_begin(),
-                               record_decl->field_end());
+      clang::RecordDecl::field_iterator field, field_end;
+      for (field = record_decl->field_begin(),
+          field_end = record_decl->field_end();
+           field != field_end; ++field)
+        ++num_children;
     }
     break;
 
@@ -5573,8 +5576,13 @@ uint32_t TypeSystemClang::GetNumFields(lldb::opaque_compiler_type_t type) {
       if (record_type) {
         clang::RecordDecl *record_decl = record_type->getDecl();
         if (record_decl) {
-          count = std::distance(record_decl->field_begin(),
-                                record_decl->field_end());
+          uint32_t field_idx = 0;
+          clang::RecordDecl::field_iterator field, field_end;
+          for (field = record_decl->field_begin(),
+              field_end = record_decl->field_end();
+               field != field_end; ++field)
+            ++field_idx;
+          count = field_idx;
         }
       }
     }
