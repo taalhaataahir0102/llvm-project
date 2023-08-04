@@ -424,6 +424,7 @@ UserExpression::Execute(DiagnosticManager &diagnostic_manager,
                         const EvaluateExpressionOptions &options,
                         lldb::UserExpressionSP &shared_ptr_to_me,
                         lldb::ExpressionVariableSP &result_var) {
+  printf("****Do Execute Expression*****\n");
   lldb::ExpressionResults expr_result = DoExecute(
       diagnostic_manager, exe_ctx, options, shared_ptr_to_me, result_var);
   Target *target = exe_ctx.GetTargetPtr();

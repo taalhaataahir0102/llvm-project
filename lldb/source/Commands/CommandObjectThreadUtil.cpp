@@ -36,13 +36,25 @@ CommandObjectMultipleThreads::CommandObjectMultipleThreads(
 
 bool CommandObjectIterateOverThreads::DoExecute(Args &command,
                                                 CommandReturnObject &result) {
+  printf("*****CommandObjectIterateOverThreads::DoExecute*****\n");
   result.SetStatus(m_success_return);
-
   bool all_threads = false;
+  
+  
+  StreamString full_command;
+    for (size_t i = 0; i < command.GetArgumentCount(); ++i) {
+        full_command.Printf("%s ", command.GetArgumentAtIndex(i));
+    }
+    printf("Executing command: %s\n", full_command.GetData());
+
+
   if (command.GetArgumentCount() == 0) {
+    printf("*****Inside zero arguments*****\n");
+    result.AppendMessage("I work at 10x");
     Thread *thread = m_exe_ctx.GetThreadPtr();
     if (!thread || !HandleOneThread(thread->GetID(), result))
       return false;
+
     return result.Succeeded();
   } else if (command.GetArgumentCount() == 1) {
     all_threads = ::strcmp(command.GetArgumentAtIndex(0), "all") == 0;

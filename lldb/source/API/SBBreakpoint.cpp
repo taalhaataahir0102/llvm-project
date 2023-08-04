@@ -49,11 +49,13 @@ SBBreakpoint::SBBreakpoint() { LLDB_INSTRUMENT_VA(this); }
 
 SBBreakpoint::SBBreakpoint(const SBBreakpoint &rhs)
     : m_opaque_wp(rhs.m_opaque_wp) {
+  printf("****SBBreakpoint*****\n");
   LLDB_INSTRUMENT_VA(this, rhs);
 }
 
 SBBreakpoint::SBBreakpoint(const lldb::BreakpointSP &bp_sp)
     : m_opaque_wp(bp_sp) {
+  printf("****SBBreakpoint*****\n");
   LLDB_INSTRUMENT_VA(this, bp_sp);
 }
 

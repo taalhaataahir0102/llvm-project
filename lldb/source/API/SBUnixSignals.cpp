@@ -101,6 +101,7 @@ bool SBUnixSignals::SetShouldSuppress(int32_t signo, bool value) {
 }
 
 bool SBUnixSignals::GetShouldStop(int32_t signo) const {
+  printf("*****Get ShouldStop API*****\n");
   LLDB_INSTRUMENT_VA(this, signo);
 
   if (auto signals_sp = GetSP())

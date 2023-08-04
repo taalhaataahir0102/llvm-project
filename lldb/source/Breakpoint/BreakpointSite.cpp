@@ -50,6 +50,7 @@ break_id_t BreakpointSite::GetNextID() {
 // should continue.
 
 bool BreakpointSite::ShouldStop(StoppointCallbackContext *context) {
+  printf("*****Should Stop*****\n");
   m_hit_counter.Increment();
   // ShouldStop can do a lot of work, and might even come come back and hit
   // this breakpoint site again.  So don't hold the m_owners_mutex the whole
@@ -67,7 +68,7 @@ bool BreakpointSite::IsBreakpointAtThisSite(lldb::break_id_t bp_id) {
   std::lock_guard<std::recursive_mutex> guard(m_owners_mutex);
   const size_t owner_count = m_owners.GetSize();
   printf("owner_count: %ld\n", owner_count);
-  printf("bp_id: %ld\n", bp_id);
+  printf("bp_id: %d\n", bp_id);
   for (size_t i = 0; i < owner_count; i++) {
     if (m_owners.GetByIndex(i)->GetBreakpoint().GetID() == bp_id)
       return true;
@@ -76,6 +77,7 @@ bool BreakpointSite::IsBreakpointAtThisSite(lldb::break_id_t bp_id) {
 }
 
 void BreakpointSite::Dump(Stream *s) const {
+  printf("*****Breakpoint Dump*****\n");
   if (s == nullptr)
     return;
 
@@ -86,6 +88,7 @@ void BreakpointSite::Dump(Stream *s) const {
 }
 
 void BreakpointSite::GetDescription(Stream *s, lldb::DescriptionLevel level) {
+  printf("*****Breakpointsite GetDescription*****\n");
   std::lock_guard<std::recursive_mutex> guard(m_owners_mutex);
   if (level != lldb::eDescriptionLevelBrief)
     s->Printf("breakpoint site: %d at 0x%8.8" PRIx64, GetID(),

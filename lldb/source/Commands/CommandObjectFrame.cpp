@@ -229,6 +229,7 @@ public:
 
     Status SetOptionValue(uint32_t option_idx, llvm::StringRef option_arg,
                           ExecutionContext *execution_context) override {
+      // printf("SetOptionValue\n");
       Status error;
       const int short_option = m_getopt_table[option_idx].val;
       switch (short_option) {
@@ -269,6 +270,7 @@ public:
                             eCommandRequiresThread | eCommandTryTargetAPILock |
                                 eCommandProcessMustBeLaunched |
                                 eCommandProcessMustBePaused) {
+    printf("****CommandObjectFrameSelect*****\n");
     CommandArgumentEntry arg;
     CommandArgumentData index_arg;
 

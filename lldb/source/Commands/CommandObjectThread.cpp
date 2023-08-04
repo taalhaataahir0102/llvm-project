@@ -179,6 +179,7 @@ public:
 
 protected:
   void DoExtendedBacktrace(Thread *thread, CommandReturnObject &result) {
+    // printf("*****DoExtendedBacktrace*****\n");
     SystemRuntime *runtime = thread->GetProcess()->GetSystemRuntime();
     if (runtime) {
       Stream &strm = result.GetOutputStream();
@@ -202,6 +203,7 @@ protected:
   }
 
   bool HandleOneThread(lldb::tid_t tid, CommandReturnObject &result) override {
+    printf("*****HandleOneThread*****\n");
     ThreadSP thread_sp =
         m_exe_ctx.GetProcessPtr()->GetThreadList().FindThreadByID(tid);
     if (!thread_sp) {

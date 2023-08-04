@@ -56,17 +56,22 @@ llvm::Expected<std::string> CommandObjectRegexCommand::SubstituteVariables(
 
 bool CommandObjectRegexCommand::DoExecute(llvm::StringRef command,
                                           CommandReturnObject &result) {
+  printf("*****CommandObjectRegexCommand::DoExecute*****\n");
   EntryCollection::const_iterator pos, end = m_entries.end();
+  // printf("pos: %ld\n",pos);
+  printf("pos: %p\n", static_cast<const void*>(&(*pos)));
+  printf("end: %p\n", static_cast<const void*>(&(*end)));
   for (pos = m_entries.begin(); pos != end; ++pos) {
     llvm::SmallVector<llvm::StringRef, 4> matches;
     if (pos->regex.Execute(command, &matches)) {
       llvm::Expected<std::string> new_command =
           SubstituteVariables(pos->command, matches);
       if (!new_command) {
+        printf("*****!new_command*****\n");
         result.SetError(new_command.takeError());
         return false;
       }
-
+      printf("new_command->c_str(): %s\n", new_command->c_str());
       // Interpret the new command and return this as the result!
       if (m_interpreter.GetExpandRegexAliases())
         result.GetOutputStream().Printf("%s\n", new_command->c_str());

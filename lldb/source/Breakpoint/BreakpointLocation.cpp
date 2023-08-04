@@ -396,6 +396,7 @@ bool BreakpointLocation::ValidForThisThread(Thread &thread) {
 // even get reported, so the check is redundant.
 
 bool BreakpointLocation::ShouldStop(StoppointCallbackContext *context) {
+  printf("*****ShouldStop BreakpointList*****\n");
   bool should_stop = true;
   Log *log = GetLog(LLDBLog::Breakpoints);
 

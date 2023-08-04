@@ -1751,8 +1751,10 @@ protected:
           if (signo != LLDB_INVALID_SIGNAL_NUMBER) {
             // Casting the actions as bools here should be okay, because
             // VerifyCommandOptionValue guarantees the value is either 0 or 1.
-            if (stop_action != -1)
+            if (stop_action != -1){
+              // printf("*****Dont tell m this is the should stop breakpoint site1\n*****");
               signals_sp->SetShouldStop(signo, stop_action);
+            }
             if (pass_action != -1) {
               bool suppress = !pass_action;
               signals_sp->SetShouldSuppress(signo, suppress);
@@ -1808,8 +1810,10 @@ protected:
           while (signo != LLDB_INVALID_SIGNAL_NUMBER) {
             if (notify_action != -1)
               signals_sp->SetShouldNotify(signo, notify_action);
-            if (stop_action != -1)
+            if (stop_action != -1){
+              // printf("*****Dont tell m this is the should stop breakpoint site2\n*****");
               signals_sp->SetShouldStop(signo, stop_action);
+            }
             if (pass_action != -1) {
               bool suppress = !pass_action;
               signals_sp->SetShouldSuppress(signo, suppress);
