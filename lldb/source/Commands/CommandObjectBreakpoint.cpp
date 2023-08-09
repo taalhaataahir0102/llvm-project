@@ -1054,78 +1054,7 @@ private:
 #define LLDB_OPTIONS_breakpoint_set_tenx
 #include "CommandOptions.inc"
 
-// CommandObjectBreakpointSetTenX
-//   COMMAND:
-//   breakpoint set10x <flags and args>
-//   EXAMPLE:
-//   breakpoint set10x --name main
-//   Above command will insert breakpoint at main function and when the breakpoint will be hit, it will also print 
-//   the backtrace as well.
-//   IMPLEMENTATION:
-//   First looked at the "breakpoint command add" to hardcode the "thread backtrace" command instead of taking input
-//   from user. Figured out that IOHandlerActivated function is responsible for taking input and IOhandlerInputComplete
-//   is called when DONE is typed. Merged the IOhandlerInputComplete inside the IOHandlerActivated and instead of taking
-//   input, hardcoded the bt command as following:
-//     void IOHandlerActivated(IOHandler &io_handler, bool interactive) override {
-//       StreamFileSP output_sp(io_handler.GetOutputStreamFileSP());
-//       if (output_sp && interactive) {
-//           printf("Auto-adding 'bt' command to breakpoint.\n");
 
-//           std::vector<std::reference_wrapper<BreakpointOptions>> *bp_options_vec =
-//               (std::vector<std::reference_wrapper<BreakpointOptions>> *)
-//               io_handler.GetUserData();
-
-//           for (BreakpointOptions &bp_options : *bp_options_vec) {
-//               auto cmd_data = std::make_unique<BreakpointOptions::CommandData>();
-//               cmd_data->user_source.AppendString("bt"); // Hardcoded 'bt' command
-//               bp_options.SetCommandDataCallback(cmd_data);
-//           }
-
-//           io_handler.SetIsDone(true);
-//       }
-//     }
-//   Here It's was adding bt command inside the breakpoint options
-//   Next tried to call this breakpoint command add inside the breakpoint set execute function but then figured out that
-//   I can do the same thing here in the breakpoint set DoExecute function as well, i.e., adding bt inside breakpoint
-//   options. Did this at the end of the DoExecute function:
-//        if (bp_sp) {
-//            auto cmd_data = std::make_unique<BreakpointOptions::CommandData>();
-//            cmd_data->user_source.AppendString("bt");
-//            bp_sp->GetOptions().SetCommandDataCallback(cmd_data);
-//   }
-
-
-
-// BREAKPOINT SET MAIN COMMAND:
-// The create breakpoint function could be written this way:
-
-// bp_sp = target.CreateBreakpoint(
-//           &(m_options.m_modules), &(m_options.m_filenames),
-//           "main", name_type_mask, m_options.m_language,
-//           m_options.m_offset_addr, m_options.m_skip_prologue, internal,
-//           m_options.m_hardware);
-
-// The third argument passed in the CreateBreakpoint is the function name in a string. So we can pass the main here
-// I've tried using it inside the case eSetTypeFunctionName and whatever I type in function name, it sets breakpoint at 
-// the main function.
-// Now two things:
-//  1) I'm not sure weather it checks that if main is present in the file or not. May be we'll have to write this check
-//     as well. We know that if in a simple (breakpoint set -n <function_name>) command, it doesnot allow breakpoint
-//     insertion if function name is not correct. So most probably it will also not allow this thing in our newly
-//     created target.CreateBreakpoint as there's a check written for this already inside the DoExecute function:
-//         if (bp_sp->GetNumLocations() == 0 && break_type != eSetTypeException) {
-//              output_stream.Printf("WARNING:  Unable to resolve breakpoint to any "
-//                                   "actual locations.\n");
-//         }
-//     But still lets make sure by testing it on a file having no main function. :)
-
-//  2) Implement a command like breakpoint set hello inside the breakpoint class which will have our implementation.
-//     Because I wrote the target.CreateBreakpoint(....) inside the eSetTypeFunctionName for testing it, and the resulting 
-//     command was "breakpoint set -n <any_func_name>" and it was settig breakpoint on main. But I belive the task is to 
-//     not use any flag and just a simple command like "breakpoint set hello" to do the implementation. 
-//     May be we can use command.GetArgumentsAtIndex() or may be any built in function to see if the second argument 
-//     is hello and then redirect the code from there to our implementation of target.CreateBreakpoint which will be
-//     another enum say "eSetTypeMain" Not sure which function can be used to extract the command arguments.
 
 class CommandObjectBreakpointSetTenX : public CommandObjectParsed {
 public:
